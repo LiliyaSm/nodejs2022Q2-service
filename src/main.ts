@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
@@ -9,10 +10,11 @@ const PORT_DEFAULT = 4000;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const file = await readFile('doc/api.yaml', 'utf-8');
-  const openAPIObject = parse(file);
-
+  const swaggerFile = await readFile('doc/api.yaml', 'utf-8');
+  const openAPIObject = parse(swaggerFile);
   SwaggerModule.setup('doc', app, openAPIObject);
+
+  app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.PORT || PORT_DEFAULT;
   await app.listen(port);
