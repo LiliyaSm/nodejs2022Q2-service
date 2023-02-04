@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { TrackI } from './tracks.interface';
 import { v4 as uuidv4, validate } from 'uuid';
@@ -50,5 +49,12 @@ export class TracksService {
   deleteTrack(id: string) {
     this.getTrackById(id);
     this.tracks = this.tracks.filter((track) => track.id !== id);
+  }
+
+  deleteFromTracksArtistId(id: string) {
+    this.tracks = this.tracks.map((track) => {
+      if (track.artistId === id) return { ...track, artistId: null };
+      return track;
+    });
   }
 }

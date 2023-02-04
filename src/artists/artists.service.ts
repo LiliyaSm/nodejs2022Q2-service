@@ -2,15 +2,19 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ForbiddenException,
+  Inject,
 } from '@nestjs/common';
 import { ArtistI } from './artists.interface';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { TracksService } from '../tracks/tracks.service';
 
 @Injectable()
 export class ArtistsService {
+  @Inject(TracksService)
+  private readonly tracksService: TracksService;
+
   private artists = [];
   getAllArtists(): ArtistI[] {
     return this.artists;
@@ -48,7 +52,10 @@ export class ArtistsService {
   }
 
   deleteArtist(id: string) {
-    this.getArtistById(id);
+    const artist = this.getArtistById(id);
+    this.tracksService.deleteFromTracksArtistId(artist.id);
+    const test = this.tracksService.getAllTracks();
+    console.log('test', test);
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
