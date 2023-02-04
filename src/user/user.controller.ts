@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -40,6 +41,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   deleteUser(@Param('id') id: string): void {
     this.userService.deleteUser(id);
   }
