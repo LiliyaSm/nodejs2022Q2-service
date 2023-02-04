@@ -57,4 +57,11 @@ export class TracksService {
       return track;
     });
   }
+
+  deleteFromTracksAlbumId(id: string) {
+    this.tracks = this.tracks.map((track) => {
+      if (track.albumId === id) return { ...track, albumId: null };
+      return track;
+    });
+  }
 }
