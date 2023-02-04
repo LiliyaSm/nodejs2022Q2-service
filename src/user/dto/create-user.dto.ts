@@ -1,4 +1,4 @@
-export class CreateUserDto {
-  readonly login: string;
+export interface CreateUserDto {
+  login: string;
   password: string;
 }
