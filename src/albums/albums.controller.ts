@@ -19,12 +19,12 @@ export class AlbumsController {
 
   @Get()
   getAll() {
-    return this.albumsService.getAllAlbums();
+    return this.albumsService.getAll();
   }
 
   @Get(':id')
-  getAlbumById(@Param('id') id: string): AlbumI {
-    return this.albumsService.getAlbumById(id);
+  getById(@Param('id') id: string): AlbumI {
+    return this.albumsService.getById(id);
   }
 
   @Post()

@@ -2,25 +2,31 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 import { TrackI } from './tracks.interface';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { FavoritesService } from '../favorites/favorites.service';
 
 @Injectable()
 export class TracksService {
+  @Inject(forwardRef(() => FavoritesService))
+  private readonly favoritesService: FavoritesService;
+
   private tracks = [];
-  getAllTracks(): TrackI[] {
+  getAll(): TrackI[] {
     return this.tracks;
   }
 
-  getTrackById(trackId: string): TrackI {
+  getById(trackId: string): TrackI {
     // 400 error
     if (!validate(trackId)) throw new BadRequestException('Id is invalid');
     const user = this.tracks.find(({ id }) => id === trackId);
     // 404 error
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('Track not found');
     return user;
   }
 
@@ -34,7 +40,7 @@ export class TracksService {
   }
 
   updateTrack(id: string, updateTrackDto: UpdateTrackDto): TrackI {
-    const trackToUpdate = this.getTrackById(id);
+    const trackToUpdate = this.getById(id);
 
     const updatedTrack = {
       ...trackToUpdate,
@@ -46,8 +52,9 @@ export class TracksService {
     return updatedTrack;
   }
 
-  deleteTrack(id: string) {
-    this.getTrackById(id);
+  deleteTrack(id: string): void {
+    this.getById(id);
+    this.favoritesService.deleteEntity(id, 'tracks');
     this.tracks = this.tracks.filter((track) => track.id !== id);
   }
 

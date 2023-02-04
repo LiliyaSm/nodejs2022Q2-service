@@ -19,12 +19,12 @@ export class ArtistsController {
 
   @Get()
   getAll() {
-    return this.artistsService.getAllArtists();
+    return this.artistsService.getAll();
   }
 
   @Get(':id')
-  getArtistById(@Param('id') id: string): ArtistI {
-    return this.artistsService.getArtistById(id);
+  getById(@Param('id') id: string): ArtistI {
+    return this.artistsService.getById(id);
   }
 
   @Post()

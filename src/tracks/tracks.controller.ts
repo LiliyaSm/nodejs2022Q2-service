@@ -18,12 +18,12 @@ export class TracksController {
 
   @Get()
   getAll() {
-    return this.tracksService.getAllTracks();
+    return this.tracksService.getAll();
   }
 
   @Get(':id')
-  getTrackById(@Param('id') id: string): TrackI {
-    return this.tracksService.getTrackById(id);
+  getById(@Param('id') id: string): TrackI {
+    return this.tracksService.getById(id);
   }
 
   @Post()

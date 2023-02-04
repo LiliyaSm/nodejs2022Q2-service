@@ -3,29 +3,34 @@ import {
   NotFoundException,
   BadRequestException,
   Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { AlbumI } from './albums.interface';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { TracksService } from '../tracks/tracks.service';
+import { FavoritesService } from '../favorites/favorites.service';
 
 @Injectable()
 export class AlbumsService {
-  @Inject(TracksService)
+  @Inject(forwardRef(() => TracksService))
   private readonly tracksService: TracksService;
 
+  @Inject(forwardRef(() => FavoritesService))
+  private readonly favoritesService: FavoritesService;
+
   private albums = [];
-  getAllAlbums(): AlbumI[] {
+  getAll(): AlbumI[] {
     return this.albums;
   }
 
-  getAlbumById(AlbumId: string): AlbumI {
+  getById(AlbumId: string): AlbumI {
     // 400 error
     if (!validate(AlbumId)) throw new BadRequestException('Id is invalid');
     const user = this.albums.find(({ id }) => id === AlbumId);
     // 404 error
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('Album not found');
     return user;
   }
 
@@ -39,7 +44,7 @@ export class AlbumsService {
   }
 
   updateAlbum(id: string, updateAlbumDto: UpdateAlbumDto): AlbumI {
-    const AlbumToUpdate = this.getAlbumById(id);
+    const AlbumToUpdate = this.getById(id);
 
     const updatedAlbum = {
       ...AlbumToUpdate,
@@ -52,10 +57,9 @@ export class AlbumsService {
   }
 
   deleteAlbum(id: string) {
-    const album = this.getAlbumById(id);
+    const album = this.getById(id);
+    this.favoritesService.deleteEntity(id, 'albums');
     this.tracksService.deleteFromTracksAlbumId(album.id);
-    const test = this.tracksService.getAllTracks();
-    console.log('test', test);
     this.albums = this.albums.filter((album) => album.id !== id);
   }
 }

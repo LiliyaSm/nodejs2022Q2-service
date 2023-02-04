@@ -3,29 +3,34 @@ import {
   NotFoundException,
   BadRequestException,
   Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { ArtistI } from './artists.interface';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { TracksService } from '../tracks/tracks.service';
+import { FavoritesService } from '../favorites/favorites.service';
 
 @Injectable()
 export class ArtistsService {
-  @Inject(TracksService)
+  @Inject(forwardRef(() => TracksService))
   private readonly tracksService: TracksService;
 
+  @Inject(forwardRef(() => FavoritesService))
+  private readonly favoritesService: FavoritesService;
+
   private artists = [];
-  getAllArtists(): ArtistI[] {
+  getAll(): ArtistI[] {
     return this.artists;
   }
 
-  getArtistById(ArtistId: string): ArtistI {
+  getById(ArtistId: string): ArtistI {
     // 400 error
     if (!validate(ArtistId)) throw new BadRequestException('Id is invalid');
     const user = this.artists.find(({ id }) => id === ArtistId);
     // 404 error
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('Artist not found');
     return user;
   }
 
@@ -39,7 +44,7 @@ export class ArtistsService {
   }
 
   updateArtist(id: string, updateArtistDto: UpdateArtistDto): ArtistI {
-    const ArtistToUpdate = this.getArtistById(id);
+    const ArtistToUpdate = this.getById(id);
 
     const updatedArtist = {
       ...ArtistToUpdate,
@@ -52,9 +57,10 @@ export class ArtistsService {
   }
 
   deleteArtist(id: string) {
-    const artist = this.getArtistById(id);
+    const artist = this.getById(id);
     this.tracksService.deleteFromTracksArtistId(artist.id);
-    const test = this.tracksService.getAllTracks();
+    const test = this.tracksService.getAll();
+    this.favoritesService.deleteEntity(id, 'artists');
     console.log('test', test);
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
