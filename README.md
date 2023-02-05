@@ -11,10 +11,10 @@
 git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
 ```
 
-## Checkout to the development branch:
+## Checkout to the develop branch:
 
 ```bash
- git checkout development
+ git checkout develop
 ```
 
 ## Installing NPM modules

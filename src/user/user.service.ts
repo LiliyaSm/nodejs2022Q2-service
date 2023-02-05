@@ -47,7 +47,7 @@ export class UserService {
     const userToUpdate = this.getUserById(id);
     // 403
     if (updatePasswordDto.oldPassword !== userToUpdate.password)
-      throw new ForbiddenException('Old password is invalid');
+      throw new ForbiddenException('Old password is wrong');
     const updatedUser = {
       ...userToUpdate,
       password: updatePasswordDto.newPassword,
