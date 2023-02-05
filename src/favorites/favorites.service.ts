@@ -46,7 +46,6 @@ export class FavoritesService {
 
   addEntityId(entityId: string, entityName: string): void {
     if (!validate(entityId)) throw new BadRequestException('Id is invalid');
-
     const allEntities = this[services[entityName]].getAll();
     const entity = allEntities.find(({ id }) => id === entityId);
     // 422 error
@@ -54,8 +53,8 @@ export class FavoritesService {
       throw new UnprocessableEntityException(`${entityName} not found`);
     this.favorites[entityName].push(entityId);
   }
+
   deleteEntity(id: string, entity: string) {
-    // const entety = this[services[entity]].getById(id);
     this.favorites[entity] = this.favorites[entity].filter(
       (entityId: string) => entityId !== id,
     );

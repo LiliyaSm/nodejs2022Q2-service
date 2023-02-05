@@ -1,5 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
-
 export class CreateAlbumDto {
   name: string;
   year: number;

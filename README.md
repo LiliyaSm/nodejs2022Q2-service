@@ -8,7 +8,13 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
+```
+
+## Checkout to the development branch:
+
+```bash
+ git checkout development
 ```
 
 ## Installing NPM modules

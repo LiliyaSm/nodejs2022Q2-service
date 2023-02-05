@@ -59,9 +59,7 @@ export class ArtistsService {
   deleteArtist(id: string) {
     const artist = this.getById(id);
     this.tracksService.deleteFromTracksArtistId(artist.id);
-    const test = this.tracksService.getAll();
     this.favoritesService.deleteEntity(id, 'artists');
-    console.log('test', test);
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
