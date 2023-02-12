@@ -1,0 +1,19 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+services:
+  app:
+    ports:
+      - 4000:4000
+    image: smliliia/app
+    restart: always
+    depends_on:
+      - db
+  db:
+    image: smliliia/database
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: securepassword
+      POSRTRES_DB: db
