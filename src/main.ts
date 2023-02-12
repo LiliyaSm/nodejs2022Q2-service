@@ -4,6 +4,9 @@ import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const PORT_DEFAULT = 4000;
 
