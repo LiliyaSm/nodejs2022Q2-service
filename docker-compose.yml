@@ -3,17 +3,17 @@ version: '3.1'
 services:
   app:
     ports:
-      - 4000:4000
+      - ${PORT}:${PORT}
     image: smliliia/app
     restart: always
     depends_on:
-      - db
-  db:
+      - postgres
+  postgres:
     image: smliliia/database
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: securepassword
-      POSRTRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSRTRES_DB: ${POSTGRES_DB}
