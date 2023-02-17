@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
 } from 'typeorm';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity('User')
 export class User extends BaseEntity {
@@ -24,15 +24,11 @@ export class User extends BaseEntity {
   @VersionColumn({ type: 'numeric', default: 1 })
   version: number;
 
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn()
+  @Transform(({ value }) => value.getTime())
   createdAt: number;
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn()
+  @Transform(({ value }) => value.getTime())
   updatedAt: number;
 }

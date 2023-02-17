@@ -20,11 +20,10 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  private users = [];
   getAll(): Promise<UserI[]> {
     return this.userRepository.find();
   }
-  async getUserById(userId): Promise<UserI> {
+  async getUserById(userId): Promise<User> {
     // 400 error
     if (!validate(userId)) throw new BadRequestException('Id is invalid');
     const user = await this.userRepository.findOneBy({ id: userId });
@@ -44,20 +43,15 @@ export class UserService {
     updatePasswordDto: UpdatePasswordDto,
   ): Promise<Omit<UserI, 'password'>> {
     const userToUpdate = await this.getUserById(id);
-    // const plainUser
     // 403
     if (updatePasswordDto.oldPassword !== userToUpdate.password)
       throw new ForbiddenException('Old password is wrong');
-    const updatedUser = {
-      ...userToUpdate,
-      password: updatePasswordDto.newPassword,
-    };
-    // await this.userRepository.save(updatedUser);
-    return await this.userRepository.save(updatedUser);
+    userToUpdate.password = updatePasswordDto.newPassword;
+    return await this.userRepository.save(userToUpdate);
   }
 
   async deleteUser(id: string) {
-    this.getUserById(id);
-    await this.userRepository.delete(id);
+    const user = await this.getUserById(id);
+    await this.userRepository.remove(user);
   }
 }
