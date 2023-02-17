@@ -2,60 +2,63 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  forwardRef,
-  Inject,
+  // forwardRef,
+  // Inject,
 } from '@nestjs/common';
 import { TrackI } from './tracks.interface';
-import { v4 as uuidv4, validate } from 'uuid';
+import { validate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { FavoritesService } from '../favorites/favorites.service';
+// import { FavoritesService } from '../favorites/favorites.service';
+import { Repository } from 'typeorm';
+import { Track } from './entities/track.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TracksService {
-  @Inject(forwardRef(() => FavoritesService))
-  private readonly favoritesService: FavoritesService;
+  // @Inject(forwardRef(() => FavoritesService))
+
+  constructor(
+    @InjectRepository(Track)
+    private readonly trackRepository: Repository<Track>,
+  ) {}
 
   private tracks = [];
-  getAll(): TrackI[] {
-    return this.tracks;
+  getAll(): Promise<TrackI[]> {
+    return this.trackRepository.find();
   }
 
-  getById(trackId: string): TrackI {
+  async getById(trackId: string): Promise<Track> {
     // 400 error
     if (!validate(trackId)) throw new BadRequestException('Id is invalid');
-    const user = this.tracks.find(({ id }) => id === trackId);
+    const track = await this.trackRepository.findOneBy({ id: trackId });
     // 404 error
-    if (!user) throw new NotFoundException('Track not found');
-    return user;
+    if (!track) throw new NotFoundException('Track not found');
+    return track;
   }
 
-  createTrack(createTrackDto: CreateTrackDto): TrackI {
-    const newTrack = {
-      ...createTrackDto,
-      id: uuidv4(),
-    };
-    this.tracks.push(newTrack);
-    return newTrack;
+  async createTrack(createTrackDto: CreateTrackDto): Promise<TrackI> {
+    const newTrack = await this.trackRepository.create(createTrackDto);
+    return await this.trackRepository.save(newTrack);
   }
 
-  updateTrack(id: string, updateTrackDto: UpdateTrackDto): TrackI {
-    const trackToUpdate = this.getById(id);
-
+  async updateTrack(
+    id: string,
+    updateTrackDto: UpdateTrackDto,
+  ): Promise<TrackI> {
+    const trackToUpdate = await this.getById(id);
     const updatedTrack = {
       ...trackToUpdate,
       ...updateTrackDto,
     };
-    this.tracks = this.tracks.map((track) =>
-      track.id === id ? updatedTrack : track,
-    );
-    return updatedTrack;
+    return await this.trackRepository.save(updatedTrack);
   }
 
-  deleteTrack(id: string): void {
-    this.getById(id);
-    this.favoritesService.deleteEntity(id, 'tracks');
-    this.tracks = this.tracks.filter((track) => track.id !== id);
+  async deleteTrack(id: string): Promise<void> {
+    const track = await this.getById(id);
+    await this.trackRepository.remove(track);
+
+    // this.favoritesService.deleteEntity(id, 'tracks');
   }
 
   deleteFromTracksArtistId(id: string) {

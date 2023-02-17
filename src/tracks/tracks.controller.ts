@@ -17,31 +17,31 @@ export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Get()
-  getAll() {
-    return this.tracksService.getAll();
+  async getAll() {
+    return await this.tracksService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id') id: string): TrackI {
-    return this.tracksService.getById(id);
+  async getById(@Param('id') id: string): Promise<TrackI> {
+    return await this.tracksService.getById(id);
   }
 
   @Post()
-  createTrack(@Body() createTrackDto: CreateTrackDto): TrackI {
-    return this.tracksService.createTrack(createTrackDto);
+  async createTrack(@Body() createTrackDto: CreateTrackDto): Promise<TrackI> {
+    return await this.tracksService.createTrack(createTrackDto);
   }
 
   @Put(':id')
-  updateTrack(
+  async updateTrack(
     @Param('id') id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): TrackI {
-    return this.tracksService.updateTrack(id, updateTrackDto);
+  ): Promise<TrackI> {
+    return await this.tracksService.updateTrack(id, updateTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteTrack(@Param('id') id: string): void {
-    this.tracksService.deleteTrack(id);
+  async deleteTrack(@Param('id') id: string): Promise<void> {
+    await this.tracksService.deleteTrack(id);
   }
 }

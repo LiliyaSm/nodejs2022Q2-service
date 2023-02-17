@@ -38,7 +38,7 @@ export class FavoritesService {
     const result = { artists: [], albums: [], tracks: [] };
     for (const field in this.favorites) {
       result[field] = this.favorites[field].map((entityId: string) => {
-        return this[services[field]].getById(entityId);
+        // return this[services[field]].getById(entityId);
       });
     }
     return result;
@@ -47,10 +47,10 @@ export class FavoritesService {
   addEntityId(entityId: string, entityName: string): void {
     if (!validate(entityId)) throw new BadRequestException('Id is invalid');
     const allEntities = this[services[entityName]].getAll();
-    const entity = allEntities.find(({ id }) => id === entityId);
+    // const entity = allEntities.find(({ id }) => id === entityId);
     // 422 error
-    if (!entity)
-      throw new UnprocessableEntityException(`${entityName} not found`);
+    // if (!entity)
+    // throw new UnprocessableEntityException(`${entityName} not found`);
     this.favorites[entityName].push(entityId);
   }
 
