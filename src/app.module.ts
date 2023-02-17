@@ -25,7 +25,10 @@ dotenv.config();
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      synchronize: false,
+      entities: ['dist/**/*.entity.js'],
+      // set to true because we need migration
+      synchronize: true,
+      autoLoadEntities: true,
     }),
   ],
   controllers: [AppController],

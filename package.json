@@ -13,6 +13,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "docker:run": "docker-compose up",
+    "docker:dev": "docker-compose -f docker-compose-dev.yml up",
     "docker:build": "docker build -f docker/DbDockerfile -t smliliia/database . & docker build -f docker/AppDockerfile -t smliliia/app .",
     "docker:scan": "docker scan smliliia/database & docker scan smliliia/app",
     "start:prod": "node dist/main",
