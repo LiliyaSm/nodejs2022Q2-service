@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # PSQL data
 /postgres-data
+
+# Application logs
+/app-logs

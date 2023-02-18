@@ -7,6 +7,8 @@ services:
       - ${PORT}:${PORT}
     image: smliliia/app
     restart: always
+    volumes:
+      - ./app-logs:/logs/app
     networks:
       - app
       - postgres
