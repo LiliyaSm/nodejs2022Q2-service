@@ -9,8 +9,6 @@ import { ArtistI } from './artists.interface';
 import { validate } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-// import { TracksService } from '../tracks/tracks.service';
-// import { FavoritesService } from '../favorites/favorites.service';
 import { Repository } from 'typeorm';
 import { Artist } from './entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,12 +24,12 @@ export class ArtistsService {
   // @Inject(forwardRef(() => FavoritesService))
   // private readonly favoritesService: FavoritesService;
 
-  private artists = [];
+  // private artists = [];
   getAll(): Promise<ArtistI[]> {
     return this.artistRepository.find();
   }
 
-  async getById(artistId: string): Promise<ArtistI> {
+  async getById(artistId: string): Promise<Artist> {
     // 400 error
     if (!validate(artistId)) throw new BadRequestException('Id is invalid');
     const artist = await this.artistRepository.findOneBy({ id: artistId });

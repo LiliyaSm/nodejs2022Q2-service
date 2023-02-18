@@ -9,57 +9,60 @@ import { AlbumI } from './albums.interface';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { TracksService } from '../tracks/tracks.service';
-import { FavoritesService } from '../favorites/favorites.service';
+// import { TracksService } from '../tracks/tracks.service';
+// import { FavoritesService } from '../favorites/favorites.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Album } from './entities/albums.entity';
 
 @Injectable()
 export class AlbumsService {
-  @Inject(forwardRef(() => TracksService))
-  private readonly tracksService: TracksService;
+  // @Inject(forwardRef(() => TracksService))
+  // private readonly tracksService: TracksService;
 
-  @Inject(forwardRef(() => FavoritesService))
-  private readonly favoritesService: FavoritesService;
-
+  constructor(
+    @InjectRepository(Album)
+    private readonly albumRepository: Repository<Album>,
+  ) {}
   private albums = [];
-  getAll(): AlbumI[] {
-    return this.albums;
+  async getAll(): Promise<AlbumI[]> {
+    return await this.albumRepository.find();
   }
 
-  getById(AlbumId: string): AlbumI {
+  async getById(albumId: string): Promise<Album> {
     // 400 error
-    if (!validate(AlbumId)) throw new BadRequestException('Id is invalid');
-    const user = this.albums.find(({ id }) => id === AlbumId);
+    if (!validate(albumId)) throw new BadRequestException('Id is invalid');
+    const album = await this.albumRepository.findOneBy({ id: albumId });
     // 404 error
-    if (!user) throw new NotFoundException('Album not found');
-    return user;
+    if (!album) throw new NotFoundException('Album not found');
+    return album;
   }
 
-  createAlbum(createAlbumDto: CreateAlbumDto): AlbumI {
-    const newAlbum = {
-      ...createAlbumDto,
-      id: uuidv4(),
-    };
-    this.albums.push(newAlbum);
-    return newAlbum;
+  async createAlbum(createAlbumDto: CreateAlbumDto): Promise<AlbumI> {
+    const newAlbum = await this.albumRepository.create(createAlbumDto);
+    return await this.albumRepository.save(newAlbum);
   }
 
-  updateAlbum(id: string, updateAlbumDto: UpdateAlbumDto): AlbumI {
-    const AlbumToUpdate = this.getById(id);
+  async updateAlbum(
+    id: string,
+    updateAlbumDto: UpdateAlbumDto,
+  ): Promise<AlbumI> {
+    const AlbumToUpdate = await this.getById(id);
 
     const updatedAlbum = {
       ...AlbumToUpdate,
       ...updateAlbumDto,
     };
-    this.albums = this.albums.map((album) =>
-      album.id === id ? updatedAlbum : album,
-    );
-    return updatedAlbum;
+    return await this.albumRepository.save(updatedAlbum);
   }
 
-  deleteAlbum(id: string) {
-    const album = this.getById(id);
-    this.favoritesService.deleteEntity(id, 'albums');
-    this.tracksService.deleteFromTracksAlbumId(album.id);
-    this.albums = this.albums.filter((album) => album.id !== id);
+  async deleteAlbum(id: string) {
+    const album = await this.getById(id);
+    await this.albumRepository.remove(album);
+
+    // const album = this.getById(id);
+    // this.favoritesService.deleteEntity(id, 'albums');
+    // this.tracksService.deleteFromTracksAlbumId(album.id);
+    // this.albums = this.albums.filter((album) => album.id !== id);
   }
 }

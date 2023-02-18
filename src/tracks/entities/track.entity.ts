@@ -3,11 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  AfterRemove,
-  EntityManager,
   JoinColumn,
 } from 'typeorm';
 import { Artist } from '../../artists/entities/artist.entity';
+import { Album } from '../../albums/entities/albums.entity';
 
 @Entity('Track')
 export class Track {
@@ -31,7 +30,8 @@ export class Track {
   })
   @JoinColumn({ name: 'artistId' })
   artist: Artist | null;
-}
 
-//   @ManyToOne(() => Album, { onDelete: 'SET NULL' })
-//   album: Album;
+  @ManyToOne(() => Album, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'albumId' })
+  album: Album;
+}
