@@ -27,10 +27,7 @@ export class FavoritesController {
 
   @Delete('/:entity/:id')
   @HttpCode(204)
-  async deleteEntity(
-    @Param('id') id: string,
-    @Param('entity') entity: 'artist' | 'track' | 'album',
-  ): Promise<void> {
-    await this.favoritesService.deleteEntity(id, requests[entity]);
+  async deleteEntity(@Param('id') id: string): Promise<void> {
+    await this.favoritesService.deleteEntity(id);
   }
 }

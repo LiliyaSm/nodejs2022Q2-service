@@ -1,13 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinColumn,
-} from 'typeorm';
-import { Artist } from '../../artists/entities/artist.entity';
-import { Album } from '../../albums/entities/albums.entity';
-import { Track } from '../../tracks/entities/track.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Favorites')
 export class Favorites {
@@ -19,8 +10,4 @@ export class Favorites {
 
   @Column()
   entityId: string;
-
-  //   @ManyToMany(() => Artist, { onDelete: '' })
-  //   @JoinColumn({ name: 'entityId' })
-  //   artist: Artist;
 }

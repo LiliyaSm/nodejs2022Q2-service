@@ -2,8 +2,8 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  // Inject,
-  // forwardRef,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { ArtistI } from './artists.interface';
 import { validate } from 'uuid';
@@ -12,19 +12,16 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Repository } from 'typeorm';
 import { Artist } from './entities/artist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FavoritesService } from '../favorites/favorites.service';
+
 @Injectable()
 export class ArtistsService {
   constructor(
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
-  // @Inject(forwardRef(() => TracksService))
-  // private readonly tracksService: TracksService;
-
-  // @Inject(forwardRef(() => FavoritesService))
-  // private readonly favoritesService: FavoritesService;
-
-  // private artists = [];
   getAll(): Promise<ArtistI[]> {
     return this.artistRepository.find();
   }
@@ -58,9 +55,7 @@ export class ArtistsService {
 
   async deleteArtist(id: string) {
     const artist = await this.getById(id);
+    await this.favoritesService.deleteEntity(id);
     await this.artistRepository.remove(artist);
-
-    // this.tracksService.deleteFromTracksArtistId(artist.id);
-    // this.favoritesService.deleteEntity(id, 'artists');
   }
 }

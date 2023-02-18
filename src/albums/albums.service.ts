@@ -6,25 +6,22 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { AlbumI } from './albums.interface';
-import { v4 as uuidv4, validate } from 'uuid';
+import { validate } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-// import { TracksService } from '../tracks/tracks.service';
-// import { FavoritesService } from '../favorites/favorites.service';
+import { FavoritesService } from '../favorites/favorites.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Album } from './entities/albums.entity';
 
 @Injectable()
 export class AlbumsService {
-  // @Inject(forwardRef(() => TracksService))
-  // private readonly tracksService: TracksService;
-
   constructor(
     @InjectRepository(Album)
     private readonly albumRepository: Repository<Album>,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
-  private albums = [];
   async getAll(): Promise<AlbumI[]> {
     return await this.albumRepository.find();
   }
@@ -58,11 +55,7 @@ export class AlbumsService {
 
   async deleteAlbum(id: string) {
     const album = await this.getById(id);
+    await this.favoritesService.deleteEntity(id);
     await this.albumRepository.remove(album);
-
-    // const album = this.getById(id);
-    // this.favoritesService.deleteEntity(id, 'albums');
-    // this.tracksService.deleteFromTracksAlbumId(album.id);
-    // this.albums = this.albums.filter((album) => album.id !== id);
   }
 }
