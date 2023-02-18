@@ -1,5 +1,6 @@
 # Home Library Service
 
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -14,7 +15,7 @@ git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
 ## Checkout to the develop branch:
 
 ```bash
- git checkout develop
+ git checkout containerization
 ```
 
 ## Installing NPM modules
@@ -22,6 +23,46 @@ git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
 ```
 npm install
 ```
+
+## Build
+
+```
+npm run docker:build
+```
+
+This will result in three docker images
+smliliia/database - database
+smliliia/appdev - application, development build
+smliliia/app - application, production build
+
+
+## Run in Development
+
+```
+npm run docker:dev
+```
+
+PSQL will be available at localhost
+PSQL database will be stored at ./postgres-data folder
+Application logs will be available both in console and at ./app-logs/app.log
+Live-reload will be available for changes in ./src folder.
+
+
+## Run in Production
+
+```
+npm run docker:prod
+```
+
+PSQL will not be accessible from localhost
+PSQL database will be stored at ./postgres-data folder
+Application logs will be available both in console and at ./app-logs/app.log
+Live-reload won't be available, since image is optimized for production
+
+## Images published
+
+Images are published to docker hub
+![](docker1.jpg)
 
 ## Running application
 

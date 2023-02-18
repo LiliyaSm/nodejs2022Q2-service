@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "docker:prod": "docker-compose up",
     "docker:dev": "docker-compose -f docker-compose-dev.yml up",
-    "docker:build": "docker build -f docker/DbDockerfile -t smliliia/database . & docker build -f docker/App.Dev.Dockerfile -t smliliia/appdev . & docker build -f docker/App.Prod.Dockerfile -t smliliia/app .",
+    "docker:build": "docker build -f docker/Db.Dockerfile -t smliliia/database . & docker build -f docker/App.Dev.Dockerfile -t smliliia/appdev . & docker build -f docker/App.Prod.Dockerfile -t smliliia/app .",
     "docker:scan": "docker scan smliliia/database & docker scan smliliia/app",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
