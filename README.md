@@ -12,7 +12,7 @@
 git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
 ```
 
-## Checkout to the develop branch:
+## Checkout to the develop branch (if needed):
 
 ```bash
  git checkout containerization
@@ -36,43 +36,59 @@ smliliia/appdev - application, development build
 smliliia/app - application, production build
 
 
-## Run in Development
+## Run application in Development (it takes time, please wait)
 
 ```
 npm run docker:dev
 ```
 
 PSQL will be available at localhost
+
 PSQL database will be stored at ./postgres-data folder
+
 Application logs will be available both in console and at ./app-logs/app.log
+
 Live-reload will be available for changes in ./src folder.
 
 
-## Run in Production
+## Run application in Production
 
 ```
 npm run docker:prod
 ```
 
-PSQL will not be accessible from localhost
+PSQL will not be accessible from localhost directly, application is still accessible on localhost
+
 PSQL database will be stored at ./postgres-data folder
+
 Application logs will be available both in console and at ./app-logs/app.log
+
 Live-reload won't be available, since image is optimized for production
 
-## Images published
-
-Images are published to docker hub
-![](docker1.jpg)
-
 ## Running application
-
-```
-npm start
-```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
+
+## Advanced Scope Containerization, Docker
+
+Images are published to docker hub
+![](docker1.jpg)
+
+ Npm script for vulnerabilities scanning
+ 
+ ```
+ npm run docker:scan
+```
+
+
+To check containers size 
+
+```
+docker images
+```
+
 
 ## Testing
 
