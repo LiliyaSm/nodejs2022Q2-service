@@ -4,3 +4,4 @@ test
 *.md
 .git
 .cache
+postgres-data
