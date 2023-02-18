@@ -7,15 +7,25 @@ services:
       - ${PORT}:${PORT}
     image: smliliia/app
     restart: always
+    networks:
+      - app
+      - postgres
     depends_on:
       - postgres
   postgres:
     container_name: "postgres"
     image: smliliia/database
-    ports:
+    expose:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: always
+    networks:
+      - postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSRTRES_DB: ${POSTGRES_DB}
+networks:
+  app:
+    driver: bridge
+  postgres:
+    driver: bridge
