@@ -6,7 +6,7 @@ export class Artist {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column({ default: false })
