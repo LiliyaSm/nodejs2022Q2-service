@@ -12,6 +12,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { isPasswordMatchHash } from '../utils/hashUtils';
 
 @Injectable()
 export class UserService {
@@ -43,9 +44,12 @@ export class UserService {
     updatePasswordDto: UpdatePasswordDto,
   ): Promise<Omit<UserI, 'password'>> {
     const userToUpdate = await this.getUserById(id);
+    const isPasswordValid = await isPasswordMatchHash(
+      updatePasswordDto.oldPassword,
+      userToUpdate.password,
+    );
     // 403
-    if (updatePasswordDto.oldPassword !== userToUpdate.password)
-      throw new ForbiddenException('Old password is wrong');
+    if (!isPasswordValid) throw new ForbiddenException('Old password is wrong');
     userToUpdate.password = updatePasswordDto.newPassword;
     return await this.userRepository.save(userToUpdate);
   }

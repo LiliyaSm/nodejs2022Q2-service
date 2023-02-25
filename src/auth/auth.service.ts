@@ -5,6 +5,7 @@ import { User } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { Injectable, ForbiddenException } from '@nestjs/common';
+import { isPasswordMatchHash } from '../utils/hashUtils';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
     });
     // 403 error
     if (!user) throw new ForbiddenException('User not found');
-    if (password !== user.password) {
+    if (!isPasswordMatchHash(password, user.password)) {
       throw new ForbiddenException('Password is not correct');
     }
   }
