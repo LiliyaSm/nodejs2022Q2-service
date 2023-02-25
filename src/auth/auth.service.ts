@@ -6,15 +6,30 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { isPasswordMatchHash } from '../utils/hashUtils';
+import { JwtService } from '@nestjs/jwt';
+import { sign } from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+export interface JWTPayload {
+  userId: string;
+  login: string;
+}
 
 @Injectable()
 export class AuthService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
+
   async signup(user: CreateUserDto): Promise<any> {
     return await this.userService.createUser(user);
   }
+
   async login({ login, password }: LoginDto): Promise<any> {
     const user = await this.userRepository.findOne({
       where: { login },
@@ -24,7 +39,21 @@ export class AuthService {
     if (!isPasswordMatchHash(password, user.password)) {
       throw new ForbiddenException('Password is not correct');
     }
+
+    const payload: JWTPayload = {
+      userId: user.id,
+      login: user.login,
+    };
+
+    const accessToken = sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: process.env.TOKEN_EXPIRE_TIME,
+    });
+
+    return {
+      access_token: accessToken,
+    };
   }
+
   async refresh(): Promise<any> {
     return null;
   }
