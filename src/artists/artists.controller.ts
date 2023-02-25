@@ -7,13 +7,16 @@ import {
   Put,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { ArtistI } from './artists.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('artist')
+@UseGuards(AuthGuard)
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 

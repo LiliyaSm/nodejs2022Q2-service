@@ -7,12 +7,16 @@ import {
   Put,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { TrackI } from './tracks.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { AuthGuard } from '../auth/auth.guard';
+
 @Controller('track')
+@UseGuards(AuthGuard)
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
