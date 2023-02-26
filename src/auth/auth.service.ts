@@ -4,11 +4,17 @@ import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
+import {
+  Injectable,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { isPasswordMatchHash } from '../utils/hashUtils';
 import { JwtService } from '@nestjs/jwt';
 import { sign } from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import { verify, JwtPayload } from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -36,25 +42,46 @@ export class AuthService {
     });
     // 403 error
     if (!user) throw new ForbiddenException('User not found');
-    if (!isPasswordMatchHash(password, user.password)) {
+    const isPasswordValid = await isPasswordMatchHash(password, user.password);
+    if (!isPasswordValid) {
       throw new ForbiddenException('Password is not correct');
     }
+    return this.generateTokens(user.id, user.login);
+  }
 
+  async refresh({ refreshToken }: RefreshTokenDto): Promise<any> {
+    if (!refreshToken)
+      throw new UnauthorizedException(
+        'Dto is invalid (no refreshToken in body)',
+      );
+    try {
+      const { userId, login } = verify(
+        refreshToken,
+        process.env.JWT_SECRET_REFRESH_KEY,
+      ) as JwtPayload;
+      return this.generateTokens(userId, login);
+    } catch {
+      throw new ForbiddenException('Refresh token is invalid');
+    }
+  }
+
+  private generateTokens(userId: string, login: string) {
     const payload: JWTPayload = {
-      userId: user.id,
-      login: user.login,
+      userId,
+      login,
     };
 
     const accessToken = sign(payload, process.env.JWT_SECRET_KEY, {
       expiresIn: process.env.TOKEN_EXPIRE_TIME,
     });
 
-    return {
-      access_token: accessToken,
-    };
-  }
+    const refreshToken = sign(payload, process.env.JWT_SECRET_REFRESH_KEY, {
+      expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+    });
 
-  async refresh(): Promise<any> {
-    return null;
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }

@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, Post, Request } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -20,7 +21,7 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
-  refresh() {
-    return this.authService.refresh();
+  refresh(@Body() token) {
+    return this.authService.refresh(token);
   }
 }
