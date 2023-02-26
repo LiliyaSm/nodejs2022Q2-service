@@ -11,6 +11,8 @@ import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppLoggerMiddleware } from './logger/logger.middleware';
+import { AllExceptionFilter } from './logger/all-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 dotenv.config();
 @Module({
@@ -36,7 +38,13 @@ dotenv.config();
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionFilter,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

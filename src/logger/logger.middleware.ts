@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Injectable, NestMiddleware, Logger, HttpStatus } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
@@ -18,7 +18,16 @@ export class AppLoggerMiddleware implements NestMiddleware {
         query,
       )} status code: ${statusCode} - ${userAgent}`;
 
-      this.logger.log(logMessage);
+      if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+        this.logger.error(logMessage);
+      } else if (
+        statusCode >= HttpStatus.BAD_REQUEST &&
+        statusCode < HttpStatus.INTERNAL_SERVER_ERROR
+      ) {
+        this.logger.warn(logMessage);
+      } else {
+        this.logger.log(logMessage);
+      }
     });
 
     next();
