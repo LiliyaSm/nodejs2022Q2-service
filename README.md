@@ -26,7 +26,7 @@ cd nodejs2022Q2-service
 
 
 ```bash
- git checkout containerization
+ git checkout authentication
 ```
 
 ## Installing NPM modules

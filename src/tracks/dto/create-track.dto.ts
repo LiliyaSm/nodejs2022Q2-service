@@ -10,7 +10,7 @@ export class CreateTrackDto {
   @IsOptional()
   @IsString()
   albumId: string | null; // refers to Album
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   duration: number; // integer number
 }

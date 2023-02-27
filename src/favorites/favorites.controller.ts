@@ -1,6 +1,15 @@
-import { Controller, Get, Param, Post, Delete, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Delete,
+  HttpCode,
+  UseGuards,
+} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './favorites.interface';
+import { AuthGuard } from '../auth/auth.guard';
 
 const requests = {
   track: 'tracks',
@@ -9,6 +18,7 @@ const requests = {
 };
 
 @Controller('favs')
+@UseGuards(AuthGuard)
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
