@@ -20,28 +20,28 @@ const getLogMsg = (message: string, optionalParams: string, level: string) => {
 
 @Injectable()
 export class Logger implements LoggerService {
-  log(message: string, optionalParams: any) {
+  async log(message: string, optionalParams: any): Promise<void> {
     const infoMessage = getLogMsg(message, optionalParams, 'LOG');
-    writeLogs(infoMessage, 'LOG');
+    await writeLogs(infoMessage, 'LOG');
   }
 
-  error(message: string, optionalParams: any) {
+  async error(message: string, optionalParams: any): Promise<void> {
     const infoMessage = getLogMsg(message, optionalParams, 'ERROR');
-    writeLogs(infoMessage, 'ERROR');
+    await writeLogs(infoMessage, 'ERROR');
   }
 
-  warn(message: string, optionalParams: any) {
+  async warn(message: string, optionalParams: any): Promise<void> {
     const infoMessage = getLogMsg(message, optionalParams, 'WARN');
-    writeLogs(infoMessage, 'WARN');
+    await writeLogs(infoMessage, 'WARN');
   }
 
-  debug(message: string, optionalParams: any) {
+  async debug(message: string, optionalParams: any): Promise<void> {
     const infoMessage = getLogMsg(message, optionalParams, 'DEBUG');
-    writeLogs(infoMessage, 'DEBUG');
+    await writeLogs(infoMessage, 'DEBUG');
   }
 
-  verbose(message: string, optionalParams: any) {
+  async verbose(message: string, optionalParams: any): Promise<void> {
     const infoMessage = getLogMsg(message, optionalParams, 'VERBOSE');
-    writeLogs(infoMessage, 'VERBOSE');
+    await writeLogs(infoMessage, 'VERBOSE');
   }
 }

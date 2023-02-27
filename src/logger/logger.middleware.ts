@@ -17,7 +17,7 @@ export class AppLoggerMiddleware implements NestMiddleware {
       this.logger.error(`Uncaught Exception: ${err.message}`);
     });
 
-    response.on('close', () => {
+    response.on('close', async () => {
       const { statusCode } = response;
 
       const logMessage = `${method} ${url} body: ${JSON.stringify(
@@ -27,14 +27,14 @@ export class AppLoggerMiddleware implements NestMiddleware {
       )} status code: ${statusCode} - ${userAgent}`;
 
       if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
-        this.logger.error(logMessage);
+        await this.logger.error(logMessage);
       } else if (
         statusCode >= HttpStatus.BAD_REQUEST &&
         statusCode < HttpStatus.INTERNAL_SERVER_ERROR
       ) {
-        this.logger.warn(logMessage);
+        await this.logger.warn(logMessage);
       } else {
-        this.logger.log(logMessage);
+        await this.logger.log(logMessage);
       }
     });
 
