@@ -12,7 +12,18 @@
 git clone https://github.com/LiliyaSm/nodejs2022Q2-service.git
 ```
 
+
 ## Checkout to the develop branch (if needed):
+=======
+## Change the directory:
+
+```bash
+cd nodejs2022Q2-service
+```
+
+
+## Make sure you are in the develop branch. If not checkout to it:
+
 
 ```bash
  git checkout containerization
