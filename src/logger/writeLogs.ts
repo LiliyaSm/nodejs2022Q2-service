@@ -8,11 +8,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 enum LogLevels {
-  'LOG',
-  'ERROR',
-  'WARN',
-  'DEBUG',
   'VERBOSE',
+  'DEBUG',
+  'LOG',
+  'WARN',
+  'ERROR',
 }
 
 const currentLogLevel = +process.env.LOG_LEVEL;
