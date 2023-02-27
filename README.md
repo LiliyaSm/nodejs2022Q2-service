@@ -43,8 +43,11 @@ npm run docker:dev
 ```
 
 PSQL will be available at localhost
+
 PSQL database will be stored at ./postgres-data folder
+
 Application logs will be available both in console and at ./app-logs/app.log
+
 Live-reload will be available for changes in ./src folder.
 
 
@@ -55,8 +58,11 @@ npm run docker:prod
 ```
 
 PSQL will not be accessible from localhost
+
 PSQL database will be stored at ./postgres-data folder
+
 Application logs will be available both in console and at ./app-logs/app.log
+
 Live-reload won't be available, since image is optimized for production
 
 ## Images published
