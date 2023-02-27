@@ -39,3 +39,4 @@ lerna-debug.log*
 
 # Application logs
 /app-logs
+/logs

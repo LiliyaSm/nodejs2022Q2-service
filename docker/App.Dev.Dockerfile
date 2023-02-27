@@ -5,5 +5,5 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-CMD ["sh", "-c",  "npm run start:dev 2>&1 | tee -a /logs/app/app.log"]
+CMD ["sh", "-c",  "npm run start:dev"]
 EXPOSE 4000

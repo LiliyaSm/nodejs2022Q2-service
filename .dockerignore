@@ -6,3 +6,4 @@ test
 .cache
 postgres-data
 app-logs
+logs
