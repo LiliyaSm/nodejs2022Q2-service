@@ -9,6 +9,14 @@ export class AppLoggerMiddleware implements NestMiddleware {
     const { method, path: url, body, query } = request;
     const userAgent = request.get('user-agent') || '';
 
+    process.on('unhandledRejection', (reason) => {
+      this.logger.error(`Unhandled Rejection: ${reason}`);
+    });
+
+    process.on('uncaughtException', (err) => {
+      this.logger.error(`Uncaught Exception: ${err.message}`);
+    });
+
     response.on('close', () => {
       const { statusCode } = response;
 

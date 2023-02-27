@@ -1,5 +1,5 @@
 import { LoggerService, Injectable } from '@nestjs/common';
-import { saveLog } from './writeLogs';
+import { writeLogs } from './writeLogs';
 
 const getLogMsg = (message: string, optionalParams: string, level: string) => {
   const currentDate = new Date();
@@ -22,19 +22,26 @@ const getLogMsg = (message: string, optionalParams: string, level: string) => {
 export class Logger implements LoggerService {
   log(message: string, optionalParams: any) {
     const infoMessage = getLogMsg(message, optionalParams, 'LOG');
-    console.log(infoMessage);
-    saveLog(infoMessage);
+    writeLogs(infoMessage, 'LOG');
   }
 
-  error(message: any, optionalParams: any) {
+  error(message: string, optionalParams: any) {
     const infoMessage = getLogMsg(message, optionalParams, 'ERROR');
-    console.log(infoMessage);
-    saveLog(infoMessage);
+    writeLogs(infoMessage, 'ERROR');
   }
 
-  warn(message: any, optionalParams: any) {
+  warn(message: string, optionalParams: any) {
     const infoMessage = getLogMsg(message, optionalParams, 'WARN');
-    console.log(infoMessage);
-    saveLog(infoMessage);
+    writeLogs(infoMessage, 'WARN');
+  }
+
+  debug(message: string, optionalParams: any) {
+    const infoMessage = getLogMsg(message, optionalParams, 'DEBUG');
+    writeLogs(infoMessage, 'DEBUG');
+  }
+
+  verbose(message: string, optionalParams: any) {
+    const infoMessage = getLogMsg(message, optionalParams, 'VERBOSE');
+    writeLogs(infoMessage, 'VERBOSE');
   }
 }
