@@ -13,24 +13,21 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  getAll(): FavoritesResponse {
-    return this.favoritesService.getAll();
+  async getAll(): Promise<FavoritesResponse> {
+    return await this.favoritesService.getAll();
   }
 
   @Post('/:entity/:id')
-  addEntityId(
+  async addEntityId(
     @Param('id') id: string,
     @Param('entity') entity: 'artist' | 'track' | 'album',
-  ): void {
-    this.favoritesService.addEntityId(id, requests[entity]);
+  ): Promise<void> {
+    await this.favoritesService.addEntityId(id, requests[entity]);
   }
 
   @Delete('/:entity/:id')
   @HttpCode(204)
-  deleteEntity(
-    @Param('id') id: string,
-    @Param('entity') entity: 'artist' | 'track' | 'album',
-  ) {
-    this.favoritesService.deleteEntity(id, requests[entity]);
+  async deleteEntity(@Param('id') id: string): Promise<void> {
+    await this.favoritesService.deleteEntity(id);
   }
 }

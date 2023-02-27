@@ -18,31 +18,35 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  getAll() {
-    return this.userService.getAll();
+  async getAll(): Promise<UserI[]> {
+    return await this.userService.getAll();
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string): UserI {
-    return this.userService.getUserById(id);
+  async getUserById(@Param('id') id: string): Promise<UserI> {
+    const user = await this.userService.getUserById(id);
+    return user;
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto): Omit<UserI, 'password'> {
-    return this.userService.createUser(createUserDto);
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<Omit<UserI, 'password'>> {
+    return await this.userService.createUser(createUserDto);
   }
 
   @Put(':id')
-  updatePassword(
+  async updatePassword(
     @Param('id') id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): Omit<UserI, 'password'> {
-    return this.userService.updatePassword(id, updatePasswordDto);
+  ): Promise<Omit<UserI, 'password'>> {
+    const result = await this.userService.updatePassword(id, updatePasswordDto);
+    return result;
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): void {
-    this.userService.deleteUser(id);
+  async deleteUser(@Param('id') id: string): Promise<void> {
+    await this.userService.deleteUser(id);
   }
 }
