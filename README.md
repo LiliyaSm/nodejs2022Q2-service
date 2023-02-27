@@ -70,6 +70,10 @@ Live-reload won't be available, since image is optimized for production
 Images are published to docker hub
 ![](docker1.jpg)
 
+## Logs
+
+Application logs are written to a folder "logs"
+
 ## Running application
 
 After starting the app on port (4000 as default) you can open
